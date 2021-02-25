@@ -6,6 +6,7 @@
 #include<sstream>
 #include<string.h>
 //#include<chrono>
+#include<sys/time.h>
 
 #define PORT 3112
 using namespace std;
@@ -18,6 +19,7 @@ int main(){
 	struct sockaddr_in server_addr;
 	//cout<<sock<<endl;
 	//cout<<"Client Code\n";
+	
 	if(connection<0){
 		cout<<"\n Socket Creation Failed\n";
 		exit(EXIT_FAILURE);
@@ -48,11 +50,14 @@ cout<<"\n\nServer Conection Stablished through PORT: "<<server_addr.sin_port<<en
 	send(connection,usr,strlen(usr),0);
 	send(connection,pass,strlen(pass),0);
 	char chk[20];
-	for(int i=0;i<20;i++)
-		chk[i]='\0';
+	struct timespec st,end;
+
+	
+	//for(int i=0;i<20;i++)
+	//	chk[i]='\0';
 
 	int xds=read(connection,chk,20);
-	
+	chk[xds]=0;
 	if(strcmp(chk,"OK")!=0){
 	
 		cout<<chk<<endl;
@@ -73,16 +78,20 @@ cout<<"\n\nServer Conection Stablished through PORT: "<<server_addr.sin_port<<en
 	//cin.getline(client_msg,80);
 	//cout<<client_msg<<endl<<endl;
 	while(true){
+		clock_gettime(CLOCK_MONOTONIC,&st);
 		cin.getline(client_msg,80);
 		send(connection,client_msg,strlen(client_msg),0);
 		//char chk2[5];
 		//int sds=read(connection,chk2,5);
 		//cout<<chk2;
-		if(strcmp(client_msg,"quit")==0)
+		clock_gettime(CLOCK_MONOTONIC,&end);
+		if(strcmp(client_msg,"quit")==0 || end.tv_sec-st.tv_sec>10)
 			break;
 			
 	}
 	cout<<"\n\nServer Disconnected......\n\n";
+	 cout<<"----------------------------------------------------------------------------------\n";
+	
 	//send(connection,client_msg,strlen(client_msg),0);
 	close(connection);
 	return 1;

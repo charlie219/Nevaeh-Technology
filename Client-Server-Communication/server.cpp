@@ -86,6 +86,7 @@ int main(){
 	send(new_socket,server_msg,strlen(server_msg),0);
 	
 	int val=read(new_socket,client_msg1,80);
+	client_msg1[val]=0;
 	cout<<"---------------------------------------------------------------------------------";
 	cout<<"\n\nClient Connection Stablised\n\n";
 	cout<<client_msg1<<endl<<endl;
@@ -101,9 +102,10 @@ int main(){
 	while(true){
 		clock_gettime(CLOCK_MONOTONIC,&st);
 		char msg[890];
-		for(int i=0;i<80;i++)
-			msg[i]='\0';
+		//for(int i=0;i<80;i++)
+			//msg[i]='\0';
 		int xval=read(new_socket,msg,890);
+		msg[xval]=0;
 		clock_gettime(CLOCK_MONOTONIC,&end);
 		double ti=end.tv_sec-st.tv_sec;	
 		cout<<setw(20)<<msg;
@@ -120,6 +122,8 @@ int main(){
 
 	}
 	cout<<"\n\n\nDisconnecting Client....\n\n";
+	 cout<<"----------------------------------------------------------------------------------\n";
+
 	close(conn);
 	close(new_socket);
 	return 0;
