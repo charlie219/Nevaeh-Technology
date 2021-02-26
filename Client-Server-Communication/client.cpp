@@ -5,8 +5,10 @@
 #include<stdlib.h>
 #include<sstream>
 #include<string.h>
-//#include<chrono>
+#include<iomanip>
+#include<ctime>
 #include<sys/time.h>
+#include<fstream>
 
 #define PORT 3112
 using namespace std;
@@ -46,12 +48,15 @@ cout<<"\n\nServer Conection Stablished through PORT: "<<server_addr.sin_port<<en
 	cin>>usr;
 	cout<<"Password: ";
 	cin>>pass;
-	
+	ofstream in("LOG.txt");
 	send(connection,usr,strlen(usr),0);
 	send(connection,pass,strlen(pass),0);
 	char chk[20];
 	struct timespec st,end;
-
+	time_t now=time(0);
+	char* cal=ctime(&now);
+	//clock_gettime(CLOCK_MONOTONIC,&cal);
+	in<<"\n\nCompunication Established at- "<<cal<<" \n\n\n";
 	
 	//for(int i=0;i<20;i++)
 	//	chk[i]='\0';
@@ -71,6 +76,7 @@ cout<<"\n\nServer Conection Stablished through PORT: "<<server_addr.sin_port<<en
 	//usleep(1000);
 	send(connection,client_msg,strlen(client_msg),0);
 	//cout<<"Message Sent::: "<<endl;
+	 in<<setw(8)<<"Client:- "<<left<<setw(20)<<client_msg<<"  ->  "<<cal;
 
 	//int val=read(connection,server_msg,80);
 	//cout<<server_msg<<endl<<endl;
@@ -82,6 +88,8 @@ cout<<"\n\nServer Conection Stablished through PORT: "<<server_addr.sin_port<<en
 		clock_gettime(CLOCK_MONOTONIC,&st);
 		cin.getline(client_msg,80);
 		send(connection,client_msg,strlen(client_msg),0);
+
+		in<<setw(8)<<"Client:- "<<left<<setw(20)<<client_msg<<"  ->  "<<cal;
 		//char chk2[5];
 		//int sds=read(connection,chk2,5);
 		//cout<<chk2;
@@ -96,5 +104,5 @@ cout<<"\n\nServer Conection Stablished through PORT: "<<server_addr.sin_port<<en
 	//send(connection,client_msg,strlen(client_msg),0);
 	close(connection);
 	return 1;
-	
+	in.close();
 }
