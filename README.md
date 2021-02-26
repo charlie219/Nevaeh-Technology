@@ -14,11 +14,11 @@
           
           cd Nevaeh-Technology/Client-Server-Communication
           make
-          server.exe
+          ./server.exe
           
    - Second Terninal
      
           cd Nevaeh-Technology/Client-Server-Communication
-          client.exe
+          ./client.exe
           
             
