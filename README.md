@@ -24,6 +24,3 @@
      
           cd Nevaeh-Technology/Client-Server-Communication
           ./client.exe
-          akash
-          123455
-            
