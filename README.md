@@ -10,13 +10,13 @@
         
    ### RUNNING:
      
-   First Terminal
+   - First Terminal
           
           cd Nevaeh-Technology/Client-Server-Communication
           make
           server.exe
           
-   Second Terninal
+   - Second Terninal
      
           cd Nevaeh-Technology/Client-Server-Communication
           client.exe
