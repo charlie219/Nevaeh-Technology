@@ -74,7 +74,8 @@ cout<<"\n\nServer Conection Stablished through PORT: "<<server_addr.sin_port<<en
 
 	//int val=read(connection,server_msg,80);
 	//cout<<server_msg<<endl<<endl;
-	cout<<"SEND MESSAGE TO SERVER::\n\n";
+	
+	cout<<"\n\nSEND MESSAGE TO SERVER::\n\n";
 	//cin.getline(client_msg,80);
 	//cout<<client_msg<<endl<<endl;
 	while(true){
