@@ -7,19 +7,49 @@
 #include<netinet/in.h>
 #include<sys/time.h>
 #include<iomanip>
-
 #define PORT 3112
 
 using namespace std;
-
+struct timespec inter,cur;
+int new_socket,conn;
+bool chk;
 // SERVER CODE
+
+//----------------------------------- To check the time delay in communication and disconnect server-------------
+void* thread2(void* arg){
+	pthread_detach(pthread_self());
+	//cout<<"Inside the thread";
+	// Calculate the current time and the diffrence between the intervals
+	while(chk){
+		continue;
+	}
+	while(1){
+		clock_gettime(CLOCK_MONOTONIC,&cur);
+        	int tim=cur.tv_sec-inter.tv_sec;
+        	//cout<<inter.tv_sec<<" "<<cur.tv_sec<<" "<<tim<<endl;
+        	if(tim>10){
+			cout<<"\n\n<---- Communication delay threshold reached ---->\n\n";
+			cout<<"Disconnecting Client ....\n\n";
+                	close(conn);
+                	close(new_socket);
+                	exit(0);
+
+        	}
+
+	}	
+}
+
+
 int main(){
 	struct sockaddr_in addr;			// Socket Adress
 	int optional=1;
+	chk=true;
+	pthread_t thread;
+	pthread_create(&thread,NULL,&thread2,NULL);
 
 	cout<<"------------------------------------------------------------------------\n";
 	cout<<"\n\nSERVER RUNNING\n"<<endl;
-	int conn= socket(AF_INET, SOCK_STREAM,0);
+	conn= socket(AF_INET, SOCK_STREAM,0);
 	//cout<<conn<<endl;
 
 	// Checking if the Socket is failed -> Exit
@@ -52,7 +82,7 @@ int main(){
 	}
 
 	int socket_addr_len=sizeof(addr);
-	int new_socket=accept(conn,(struct sockaddr*)&addr,(socklen_t*)&socket_addr_len);
+	new_socket=accept(conn,(struct sockaddr*)&addr,(socklen_t*)&socket_addr_len);
 	if(new_socket<0){
 		cout<<"Didn't Accept";
 		exit(EXIT_FAILURE);
@@ -78,7 +108,8 @@ int main(){
 		return 1;
 	}
 
-
+//-------------------------------------- COMMUNICATION----------------------------
+	clock_gettime(CLOCK_MONOTONIC,&inter);
 	char empty[80]="";	
 	
 	char client_msg1[80];
@@ -88,6 +119,7 @@ int main(){
 	int val=read(new_socket,client_msg1,80);
 	client_msg1[val]=0;
 	cout<<"---------------------------------------------------------------------------------";
+	chk=false;
 	cout<<"\n\nClient Connection Stablised\n\n";
 	cout<<client_msg1<<endl<<endl;
 	
@@ -100,14 +132,15 @@ int main(){
 	//val=read(new_socket,client_msg,80);
 	//cout<<client_msg<<endl<<endl;
 	while(true){
-		clock_gettime(CLOCK_MONOTONIC,&st);
+		clock_gettime(CLOCK_MONOTONIC,&inter);
+		//clock_gettime(CLOCK_MONOTONIC,&st);
 		char msg[890];
 		//for(int i=0;i<80;i++)
 			//msg[i]='\0';
 		int xval=read(new_socket,msg,890);
 		msg[xval]=0;
 		clock_gettime(CLOCK_MONOTONIC,&end);
-		double ti=end.tv_sec-st.tv_sec;	
+		double ti=cur.tv_sec-inter.tv_sec;	
 		cout<<setw(20)<<msg;
 		cout<<setw(20)<<"  -->  Communication delay  "<<ti<<endl;
 
@@ -123,9 +156,11 @@ int main(){
 	}
 	cout<<"\n\n\nDisconnecting Client....\n\n";
 	 cout<<"----------------------------------------------------------------------------------\n";
-
+	
+	pthread_join(thread,NULL);
+	pthread_exit(NULL);
 	close(conn);
 	close(new_socket);
 	return 0;
+	exit(0);
 }
-	 

@@ -12,13 +12,44 @@
 
 #define PORT 3112
 using namespace std;
+struct timespec st,end;
+int connection;
+bool chk2;
 //using namespace std::chrono;
+
+//----------------------------------- To check the time delay in communication and disconnect server-------------
+
+void* thread3(void* arg){
+        pthread_detach(pthread_self());
+	while(chk2)
+		continue;
+
+        while(1){
+                clock_gettime(CLOCK_MONOTONIC,&end);
+                int tim=end.tv_sec-st.tv_sec;
+		//cout<<tim;
+		// Time delay threshold is 10 sec
+		if(tim>11){
+                        cout<<"\n\n<---- Communication delay threshold reached ---->\n\n";
+                        cout<<"Server Disconnecting\n\n";
+                        close(connection);
+                        exit(0);
+
+                }
+
+        }
+}
+
 
 // CLIENT CODE
 int main(){
 
-	int connection=socket(AF_INET, SOCK_STREAM,0);
+	connection=socket(AF_INET, SOCK_STREAM,0);
 	struct sockaddr_in server_addr;
+	chk2=true;
+
+	pthread_t pid;
+        pthread_create(&pid,NULL,&thread3,NULL);
 	//cout<<sock<<endl;
 	//cout<<"Client Code\n";
 	
@@ -52,12 +83,15 @@ cout<<"\n\nServer Conection Stablished through PORT: "<<server_addr.sin_port<<en
 	send(connection,usr,strlen(usr),0);
 	send(connection,pass,strlen(pass),0);
 	char chk[20];
-	struct timespec st,end;
+
 	time_t now=time(0);
 	char* cal=ctime(&now);
 	//clock_gettime(CLOCK_MONOTONIC,&cal);
 	in<<"\n\nCompunication Established at- "<<cal<<" \n\n\n";
 	
+	chk2=false;
+	clock_gettime(CLOCK_MONOTONIC,&st);
+			
 	//for(int i=0;i<20;i++)
 	//	chk[i]='\0';
 
@@ -102,6 +136,8 @@ cout<<"\n\nServer Conection Stablished through PORT: "<<server_addr.sin_port<<en
 	 cout<<"----------------------------------------------------------------------------------\n";
 	
 	//send(connection,client_msg,strlen(client_msg),0);
+	pthread_join(pid,NULL);
+        pthread_exit(NULL);
 	close(connection);
 	return 1;
 	in.close();
