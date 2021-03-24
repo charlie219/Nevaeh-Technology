@@ -116,12 +116,12 @@ int main(int argc , char *argv[]){
 		memcpy(send_data + sizeof(comm_struct) - sizeof(char*) +sizeof(int) , temp.name, len2+1);
 		
 		
-		sendto(conn , send_data , sizeof(comm_struct) - sizeof(char*) + sizeof(int) + len2 ,0,(struct sockaddr*)&server_addr,len);
+		//sendto(conn , send_data , sizeof(comm_struct) - sizeof(char*) + sizeof(int) + len2 ,0,(struct sockaddr*)&server_addr,len);
 		//cout<<data.name<<" -> "<<send_data+sizeof(int);		
 		
 		//cout<< "PTR: " <<temp.name<<endl;
 		
-		 if (sendto(conn,&temp, sizeof(temp),0,(struct sockaddr*)&server_addr,len)<0)
+		 if(sendto(conn , send_data , sizeof(comm_struct) - sizeof(char*) + sizeof(int) + len2 ,0,(struct sockaddr*)&server_addr,len) < 0)
 			cout<<"Packet of Sequence Number:- "<<temp.sequence<<" not sent";
                 else	
                 	cout<<"Packet of Sequence Number:- "<<temp.sequence<<" sent";
