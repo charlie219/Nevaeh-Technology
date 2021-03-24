@@ -16,9 +16,6 @@ struct comm_struct{
 	int sequence;	// 	4
 	char phone_no[13];//	13
 	double salary;//	8
-};
-
-struct comm_struct2{
 	char *name;
 };
 
@@ -74,7 +71,6 @@ int main(int argc , char *argv[]){
 		int count=0;	
 		line+=' ';
 		comm_struct temp;
-		comm_struct2 data;
 		int i=-1;
 		for(int ii=0 ; ii < 4 ; ii++){
 			string word;
@@ -99,8 +95,8 @@ int main(int argc , char *argv[]){
                                 nam= (char *)calloc(n+1,sizeof(char));
 				strcpy(nam,word.c_str());
 		
-				data.name = nam;
-				//cout << endl << data.name << nam;		
+				temp.name = nam;
+				//cout << endl << temp.name << nam;		
 			}
 			if(count==3){
 				strncpy(temp.phone_no,word.c_str(), sizeof(temp.phone_no));
@@ -113,14 +109,27 @@ int main(int argc , char *argv[]){
 		}
 		
 		char * send_data;
-		int len2=strlen(data.name);
-		send_data = new char[sizeof(int) + len2+1]();
-		memcpy(send_data , &len2 , sizeof(int));
-		memcpy(send_data + sizeof(int) , data.name, len2+1);
+		int len2=strlen(temp.name);
+		send_data = new char[sizeof(comm_struct) - sizeof(char*) + sizeof(int) + len2+1]();
+		memcpy(send_data , &temp , sizeof(comm_struct) - sizeof(char*));
+		memcpy(send_data + sizeof(comm_struct) - sizeof(char*), &len2 , sizeof(int));
+		memcpy(send_data + sizeof(comm_struct) - sizeof(char*) +sizeof(int) , temp.name, len2+1);
 		
+		comm_struct temp2;
+		memcpy(&temp2 , send_data, sizeof(int)+ sizeof(char)*11);
+		memcpy(&temp2.salary , send_data + 4 + 13 , sizeof(double));
+		cout<<temp2.sequence << " " << temp2.phone_no << " " << temp2.salary;
+		int str_len;
+                memcpy(&str_len , send_data+ 4 + 13 + 8 , sizeof(int));
+                temp2.name = new char[str_len + 1];
+                memcpy(temp2.name , send_data +  4 + 13 + 8 + 4  , str_len);
+		cout << temp2.name;
+		//cout<<send_data +  sizeof(comm_struct) - sizeof(char*);
+		sendto(conn , send_data , sizeof(comm_struct) - sizeof(char*) + sizeof(int) + len2 ,0,(struct sockaddr*)&server_addr,len);
 		//cout<<data.name<<" -> "<<send_data+sizeof(int);		
 		
 		//cout<< "PTR: " <<temp.name<<endl;
+		/*
 		 if (sendto(conn,&temp, sizeof(temp),0,(struct sockaddr*)&server_addr,len)<0){
 			cout<<"Packet of Sequence Number:- "<<temp.sequence<<" not sent";
 		}
@@ -133,6 +142,7 @@ int main(int argc , char *argv[]){
 
 //                        cout<<"\nPacket of Sequence Number:- "<<temp.sequence<<" sent";
 		}
+		*/
                 cout<<endl;
                 sleep(1);
 

@@ -6,4 +6,4 @@ echo "tcpdumb Commands running...."
 
 
 # Capture  and savw
-tcpdump -c 12 -XX -w first.pcap -i lo
+tcpdump -c 6 -XX -w first.pcap -i lo

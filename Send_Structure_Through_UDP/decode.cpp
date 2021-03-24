@@ -69,11 +69,14 @@ int main(int argc, char *argv[])
                 
 //----------------------------------------- NAME --------------------------------
 
-		memcpy(&pak , data + 42 , sizeof(int) + sizeof(char) * 11 );
+		st =42;
+		memcpy(&pak , data + st , sizeof(int)+ sizeof(char)*11);
+                memcpy(&pak.salary , data + st +sizeof(int) + sizeof(char)*13 , sizeof(double));
 
-		memcpy(&pak.salary , data+ st , sizeof(double));
-		st=42;
-		returnValue = pcap_next_ex(pcap, &header, &data);
+//		memcpy(&pak , data + 42 , sizeof(int) + sizeof(char) * 11 );
+//		memcpy(&pak.salary , data+ st , sizeof(double));
+		st+=sizeof(int) + sizeof(char)*13 + sizeof(double) ;
+		//returnValue = pcap_next_ex(pcap, &header, &data);
 		int str_len;
 		memcpy(&str_len , data+st , sizeof(int));
 		pak.name = new char[str_len + 1];
