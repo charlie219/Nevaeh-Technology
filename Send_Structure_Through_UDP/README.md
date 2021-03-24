@@ -1,4 +1,4 @@
-## [Sending Structure through UDP protocal](https://github.com/charlie219/Nevaeh-Technology/tree/main/Send_Structure_Through_UDP)
+## [Sending Structure through UDP protocol](https://github.com/charlie219/Nevaeh-Technology/tree/main/Send_Structure_Through_UDP)
 <p>
     This is a data dispensing server, which will send N no. of packets having the structure mentioned below to a given IP PORT over UDP protocol. The sending data should be in the provided structure formate. For this program, the input is provided under input.txt file.
 </p>
