@@ -65,7 +65,7 @@ int main(int argc , char *argv[]){
 	ifstream file("input.txt");
 	string line;
 	int var;
-	cout<<sizeof(comm_struct)<<endl;
+	cout << "Structure Size: " << sizeof(comm_struct) << endl;
 
 	while(getline(file,line)){
 		int count=0;	
@@ -115,34 +115,16 @@ int main(int argc , char *argv[]){
 		memcpy(send_data + sizeof(comm_struct) - sizeof(char*), &len2 , sizeof(int));
 		memcpy(send_data + sizeof(comm_struct) - sizeof(char*) +sizeof(int) , temp.name, len2+1);
 		
-		comm_struct temp2;
-		memcpy(&temp2 , send_data, sizeof(int)+ sizeof(char)*11);
-		memcpy(&temp2.salary , send_data + 4 + 13 , sizeof(double));
-		cout<<temp2.sequence << " " << temp2.phone_no << " " << temp2.salary;
-		int str_len;
-                memcpy(&str_len , send_data+ 4 + 13 + 8 , sizeof(int));
-                temp2.name = new char[str_len + 1];
-                memcpy(temp2.name , send_data +  4 + 13 + 8 + 4  , str_len);
-		cout << temp2.name;
-		//cout<<send_data +  sizeof(comm_struct) - sizeof(char*);
+		
 		sendto(conn , send_data , sizeof(comm_struct) - sizeof(char*) + sizeof(int) + len2 ,0,(struct sockaddr*)&server_addr,len);
 		//cout<<data.name<<" -> "<<send_data+sizeof(int);		
 		
 		//cout<< "PTR: " <<temp.name<<endl;
-		/*
-		 if (sendto(conn,&temp, sizeof(temp),0,(struct sockaddr*)&server_addr,len)<0){
+		
+		 if (sendto(conn,&temp, sizeof(temp),0,(struct sockaddr*)&server_addr,len)<0)
 			cout<<"Packet of Sequence Number:- "<<temp.sequence<<" not sent";
-		}
-
-                else{
-			if(sendto(conn , send_data , sizeof(int)+strlen(data.name),0,(struct sockaddr*)&server_addr,len)> 0)
-                                cout<<"Packet of Sequence Number:- "<<temp.sequence<<" sent";
-                        else
-                                cout << "Error Occred...\n\n";
-
-//                        cout<<"\nPacket of Sequence Number:- "<<temp.sequence<<" sent";
-		}
-		*/
+                else	
+                	cout<<"Packet of Sequence Number:- "<<temp.sequence<<" sent";
                 cout<<endl;
                 sleep(1);
 
@@ -158,11 +140,8 @@ int main(int argc , char *argv[]){
 			cout<<"Packet number "<<i+1<<" not sent";
 
         	else
-                	cout<<"Packet number "<<i+1<<" sent";
-		cout<<endl;
-		sleep(1);
-	}
-*/
+                	cout<<"Packe
 	close(conn);
 	return 1;
+*/
 }
